@@ -1,0 +1,46 @@
+<?php include 'koneksi.php';
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>KlikCuan Lite</title>
+</head>
+<body>
+  <h1>Daftar Iklan</h1>
+
+  <?php
+  $result = mysqli_query($koneksi, "SELECT * FROM iklan");
+
+  while ($row = mysqli_fetch_assoc($result)) {
+    echo "<div>";
+    echo "<h2>" . htmlspecialchars($row['judul']) . "</h2>";
+    echo "<p>" . htmlspecialchars($row['deskripsi']) . "</p>";
+    
+    $link = htmlspecialchars($row['link']);
+    $id = uniqid(); // ID unik untuk tiap tombol
+
+    echo "<div id='container_$id'>";
+    echo "<button id='btn_$id' style='display:none;' onclick=\"window.open('$link', '_blank', 'noopener,noreferrer')\">Lihat Iklan</button>";
+    echo "<p id='timer_$id'>Tunggu 10 detik...</p>";
+    echo "</div>";
+
+    echo "<script>
+        let countdown_$id = 10;
+        const timer_$id = setInterval(() => {
+            countdown_$id--;
+            document.getElementById('timer_$id').innerText = 'Tunggu ' + countdown_$id + ' detik...';
+            if (countdown_$id <= 0) {
+                clearInterval(timer_$id);
+                document.getElementById('btn_$id').style.display = 'inline-block';
+                document.getElementById('timer_$id').style.display = 'none';
+            }
+        }, 1000);
+    </script>";
+
+    echo "<hr></div>";
+}
+  }
+  ?>
+</body>
+</html>
